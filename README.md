@@ -33,11 +33,11 @@ python fraud_detection.py
 ## Results (with Threshold = 0.80)
 Evaluated on a hold-out test set of 85,443 transactions.
 ``` text
-Metric        |  	 Value
-Accuracy      |  	 0.9994
-Precision     |     0.9900
-Recall        |     0.6689
-F1-Score      |     0.7984
+Metric        |      Value
+Accuracy      |      0.9994
+Precision     |      0.9900
+Recall        |      0.6689
+F1-Score      |      0.7984
 ```
 ## Confusion Matrix
 ```text

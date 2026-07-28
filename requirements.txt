@@ -1,0 +1,14 @@
+## License
+
+This project is for educational purposes as part of a cybersecurity internship.
+
+```text
+
+---
+
+## File 3: `requirements.txt`
+
+```text
+# No external dependencies required.
+# Python 3.9+ is sufficient to run this script.
+```

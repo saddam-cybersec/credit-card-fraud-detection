@@ -1,81 +1,56 @@
 # Credit Card Fraud Detection System
 
-A machine learning implementation for detecting fraudulent credit card transactions using **Logistic Regression** with **Stochastic Gradient Descent** (SGD).
+A machine learning pipeline built to detect fraudulent credit card transactions using a **Random Forest classifier** with customizable probability threshold tuning.
 
 ## Overview
-
-This project addresses the problem of credit card fraud detection, where fraudulent transactions represent an extremely small fraction of total transactions (0.17%). The model is trained on the Kaggle Credit Card Fraud Detection dataset and achieves strong performance using Precision, Recall, and F1-Score as evaluation metrics.
+This project addresses severe class imbalance in credit card fraud detection (only 0.17% fraud). It handles data preprocessing, feature scaling, oversampling, and trains a Random Forest model to accurately flag frauds while minimizing false positives in production.
 
 ## Key Features
-
-- **Imbalance Handling:** Uses oversampling to balance the minority fraud class in the training set.
-- **Algorithm:** Logistic Regression trained via Stochastic Gradient Descent.
-- **Evaluation:** Confusion Matrix, Precision, Recall, F1-Score, and Accuracy.
-- **Pure Python:** No external dependencies required.
+- **Data Pipeline**: Custom CSV loading and manual Standard Scaling of `Time` and `Amount` features.
+- **Imbalance Handling**: Custom oversampling of the minority fraud class to perfectly balance the training dataset.
+- **Algorithm**: `scikit-learn` Random Forest Classifier for non-linear pattern recognition.
+- **Threshold Tuning**: Configurable probability threshold (`0.80` currently) allows tuning between catching more frauds (Recall) or reducing false alarms (Precision).
 
 ## Dataset
+- **Source**: [Kaggle - Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
+- **Download Instructions**: You must download the `creditcard.csv` file from the Kaggle link above and place it in the **root** folder of this project directory (next to `fraud_detection.py`).
+- **Samples**: 284,807 transactions
+- **Features**: 28 anonymized PCA features (V1–V28), Time, Amount
+- **Target**: Class (0 = Legitimate, 1 = Fraudulent)
+- **Imbalance**: Only 492 fraud cases (0.172%) in the original dataset.
 
-- **Source:** [Kaggle - Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
-- **Samples:** 284,807 transactions
-- **Features:** 28 anonymized PCA features (V1–V28), Time, Amount
-- **Target:** Class (0 = Legitimate, 1 = Fraudulent)
-- **Imbalance:** Only 492 fraud cases (0.172%)
-
-## Requirements
-
-- Python 3.9 or higher
-
-## Installation
-
-```bash
-git clone https://github.com/yourusername/credit-card-fraud-detection.git
-cd credit-card-fraud-detection
-```
-## Usage
-1. Download the dataset from Kaggle and place creditcard.csv in the project folder.
-## Dataset
-
-This project uses the **Credit Card Fraud Detection** dataset from Kaggle.
-
-### Download Instructions
-
-1. Go to the dataset page:  
-   [Kaggle - Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
-
-2. Click the **"Download"** button on the page.  
-   *(You will need a free Kaggle account to download the file.)*
-
-3. Extract the downloaded ZIP file.
-
-4. Copy the `creditcard.csv` file and paste it into the **root directory** of this project folder.
-
-Your project folder should look like this:
-```
-credit-card-fraud-detection/
-├── fraud_detection.py   # Main script
-├── creditcard.csv # <-- Place the dataset here
-├── requirements.txt     # Dependencies (none required)
-└── README.md            # Project documentation
-```
-
-> **Note:** The CSV file is approximately 150 MB. Ensure you have enough disk space and a stable internet connection for the download.
-
-3. Run the script:
-
+## Installation & Usage
+1. Clone this repository to your local machine.
+2. Install the required library:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Download creditcard.csv from the Kaggle link above and place it in the project folder.
+4. Run the script:
 ```bash
 python fraud_detection.py
 ```
-## Results
-Metric	Value
-Accuracy	0.9972
-Precision	0.91
-Recall	0.80
-F1-Score	0.85
-
+## Results (with Threshold = 0.80)
+Evaluated on a hold-out test set of 85,443 transactions.
+``` text
+Metric        |  	  Value
+Accuracy      |  	  0.9994
+Precision     |     0.9900
+Recall        |     0.6689
+F1-Score      |     0.7984
+```
 ## Confusion Matrix
 ```text
-TP: 142  |  FP: 14
-FN: 35   |  TN: 85,213
+TP: 99   |  FP: 1
+FN: 49   |  TN: 85294
+```
+## Project Structure
+``` text
+credit-card-fraud-detection/
+├── creditcard.csv        # The Kaggle dataset (must be downloaded manually)
+├── fraud_detection.py    # Main Python script
+├── requirements.txt      # Dependency list
+└── README.md             # Project documentation
 ```
 ## Author
 ## Saddam Hussain

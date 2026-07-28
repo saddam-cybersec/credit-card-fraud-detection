@@ -52,10 +52,10 @@ This project uses the **Credit Card Fraud Detection** dataset from Kaggle.
 Your project folder should look like this:
 ```
 credit-card-fraud-detection/
-├── fraud_detection.py
+├── fraud_detection.py   # Main script
 ├── creditcard.csv # <-- Place the dataset here
-├── requirements.txt
-└── README.md
+├── requirements.txt     # Dependencies (none required)
+└── README.md            # Project documentation
 ```
 
 > **Note:** The CSV file is approximately 150 MB. Ensure you have enough disk space and a stable internet connection for the download.
@@ -76,13 +76,6 @@ F1-Score	0.85
 ```text
 TP: 142  |  FP: 14
 FN: 35   |  TN: 85,213
-```
-Project Structure
-```text
-credit-card-fraud-detection/
-├── fraud_detection.py   # Main script
-├── requirements.txt     # Dependencies (none required)
-└── README.md            # Project documentation
 ```
 ## Author
 ## Saddam Hussain

@@ -33,8 +33,34 @@ cd credit-card-fraud-detection
 ```
 ## Usage
 1. Download the dataset from Kaggle and place creditcard.csv in the project folder.
+## Dataset
 
-2. Run the script:
+This project uses the **Credit Card Fraud Detection** dataset from Kaggle.
+
+### Download Instructions
+
+1. Go to the dataset page:  
+   [Kaggle - Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
+
+2. Click the **"Download"** button on the page.  
+   *(You will need a free Kaggle account to download the file.)*
+
+3. Extract the downloaded ZIP file.
+
+4. Copy the `creditcard.csv` file and paste it into the **root directory** of this project folder.
+
+Your project folder should look like this:
+
+credit-card-fraud-detection/
+├── fraud_detection.py
+├── creditcard.csv # <-- Place the dataset here
+├── requirements.txt
+└── README.md
+
+
+> **Note:** The CSV file is approximately 150 MB. Ensure you have enough disk space and a stable internet connection for the download.
+
+3. Run the script:
 
 ```bash
 python fraud_detection.py

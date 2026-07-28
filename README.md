@@ -31,7 +31,7 @@ This project addresses the problem of credit card fraud detection, where fraudul
 git clone https://github.com/yourusername/credit-card-fraud-detection.git
 cd credit-card-fraud-detection
 ```
-#Usage
+## Usage
 1. Download the dataset from Kaggle and place creditcard.csv in the project folder.
 
 2. Run the script:
@@ -39,14 +39,14 @@ cd credit-card-fraud-detection
 ```bash
 python fraud_detection.py
 ```
-#Results
+## Results
 Metric	Value
 Accuracy	0.9972
 Precision	0.91
 Recall	0.80
 F1-Score	0.85
 
-#Confusion Matrix
+## Confusion Matrix
 ```text
 TP: 142  |  FP: 14
 FN: 35   |  TN: 85,213
@@ -58,6 +58,6 @@ credit-card-fraud-detection/
 ├── requirements.txt     # Dependencies (none required)
 └── README.md            # Project documentation
 ```
-#Author
-##Saddam Hussain
+## Author
+## Saddam Hussain
 Cyber Security Intern – Arch Technologies

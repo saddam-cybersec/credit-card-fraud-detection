@@ -1,7 +1,7 @@
 """
 Credit Card Fraud Detection System
 -----------------------------------
-Implementation of Logistic Regression with Stochastic Gradient Descent
+Implementation using Random Forest with a strict probability threshold
 to detect fraudulent credit card transactions.
 
 Author: Saddam Hussain
@@ -13,7 +13,7 @@ import math
 import random
 
 # ------------------------------------------------------------
-# 1. MATH UTILITIES
+# 1. MATH UTILITIES (Kept for learning demonstration)
 # ------------------------------------------------------------
 
 def sigmoid(z):
@@ -145,87 +145,7 @@ def oversample_minority(X_train, y_train):
     return X_new, y_new
 
 # ------------------------------------------------------------
-# 6. LOGISTIC REGRESSION TRAINER (SGD)
-# ------------------------------------------------------------
-
-def train_logistic_regression(X_train, y_train, learning_rate=0.01, epochs=10):
-    """
-    Trains logistic regression using Stochastic Gradient Descent.
-    weights[0] = bias, weights[1:] = coefficients for 30 features.
-    """
-    num_features = len(X_train[0])
-    weights = [random.uniform(-0.01, 0.01) for _ in range(num_features + 1)]
-    
-    n = len(X_train)
-    
-    print(f"[INFO] Training on {n} samples, {num_features} features...")
-    for epoch in range(1, epochs + 1):
-        total_loss = 0.0
-        combined = list(zip(X_train, y_train))
-        random.shuffle(combined)
-        
-        for features, label in combined:
-            prob = predict_probability(features, weights)
-            
-            # Avoid log(0)
-            if prob == 1.0:
-                prob = 0.9999
-            elif prob == 0.0:
-                prob = 0.0001
-            
-            loss = - (label * math.log(prob) + (1 - label) * math.log(1 - prob))
-            total_loss += loss
-            
-            error = prob - label
-            
-            # Update bias
-            weights[0] -= learning_rate * error
-            
-            # Update feature weights
-            for i in range(num_features):
-                weights[i + 1] -= learning_rate * error * features[i]
-        
-        avg_loss = total_loss / n
-        print(f"  Epoch {epoch}/{epochs} - Avg Loss: {avg_loss:.6f}")
-    
-    return weights
-
-# ------------------------------------------------------------
-# 7. EVALUATION METRICS
-# ------------------------------------------------------------
-
-def evaluate_model(X_test, y_test, weights, threshold=0.5):
-    """Calculate Confusion Matrix, Precision, Recall, F1, Accuracy."""
-    tp = tn = fp = fn = 0
-    
-    for features, true_label in zip(X_test, y_test):
-        pred = predict_class(features, weights, threshold)
-        
-        if pred == 1 and true_label == 1:
-            tp += 1
-        elif pred == 0 and true_label == 0:
-            tn += 1
-        elif pred == 1 and true_label == 0:
-            fp += 1
-        elif pred == 0 and true_label == 1:
-            fn += 1
-    
-    total = tp + tn + fp + fn
-    accuracy = (tp + tn) / total if total > 0 else 0
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 0
-    recall = tp / (tp + fn) if (tp + fn) > 0 else 0
-    f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
-    
-    return {
-        'TP': tp, 'TN': tn, 'FP': fp, 'FN': fn,
-        'Accuracy': accuracy,
-        'Precision': precision,
-        'Recall': recall,
-        'F1-Score': f1
-    }
-
-# ------------------------------------------------------------
-# 8. MAIN EXECUTION
+# 6. MAIN EXECUTION (MODEL REPLACED WITH RANDOM FOREST)
 # ------------------------------------------------------------
 
 def main():
@@ -256,26 +176,46 @@ def main():
     print("\n[4] Handling class imbalance (oversampling fraud)...")
     X_train_bal, y_train_bal = oversample_minority(X_train, y_train)
     
-    # Step 5: Train model
-    print("\n[5] Training Logistic Regression (SGD)...")
-    weights = train_logistic_regression(X_train_bal, y_train_bal, 
-                                        learning_rate=0.01, epochs=10)
+    # Step 5: Train Random Forest Classifier
+    print("\n[5] Training Random Forest Classifier...")
+    from sklearn.ensemble import RandomForestClassifier
+    # n_estimators=100 is standard, n_jobs=-1 uses all CPU cores for speed
+    rf_model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+    rf_model.fit(X_train_bal, y_train_bal)
+    print("[INFO] Random Forest training complete.")
     
-    # Step 6: Evaluate
+    # Step 6: Evaluate with a high probability threshold (to eliminate False Positives)
     print("\n[6] Evaluating model on test set...")
-    results = evaluate_model(X_test, y_test, weights, threshold=0.5)
+    from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
+    
+    # Get the probability scores, not the 0/1 predictions
+    y_probs = rf_model.predict_proba(X_test)[:, 1]
+    
+    # Apply a custom threshold (0.80 means 80% confidence required to flag as fraud)
+    threshold = 0.80
+    y_pred = (y_probs >= threshold).astype(int)
+    
+    # Calculate metrics
+    cm = confusion_matrix(y_test, y_pred)
+    acc = accuracy_score(y_test, y_pred)
+    prec = precision_score(y_test, y_pred)
+    rec = recall_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
     
     print("\n" + "=" * 60)
     print("FINAL RESULTS")
     print("=" * 60)
     print(f"Confusion Matrix:")
-    print(f"  TP: {results['TP']}  |  FP: {results['FP']}")
-    print(f"  FN: {results['FN']}  |  TN: {results['TN']}")
-    print(f"\nAccuracy:  {results['Accuracy']:.4f}")
-    print(f"Precision: {results['Precision']:.4f}")
-    print(f"Recall:    {results['Recall']:.4f}")
-    print(f"F1-Score:  {results['F1-Score']:.4f}")
+    print(f"  TP: {cm[1,1]}  |  FP: {cm[0,1]}")
+    print(f"  FN: {cm[1,0]}  |  TN: {cm[0,0]}")
+    
+    print(f"\nAccuracy:  {acc:.4f}")
+    print(f"Precision: {prec:.4f}")
+    print(f"Recall:    {rec:.4f}")
+    print(f"F1-Score:  {f1:.4f}")
     print("=" * 60)
+    
+    print("\n[INFO] Note: You can tweak the 'threshold' variable in the code to balance Precision vs Recall.")
 
 if __name__ == "__main__":
     main()
